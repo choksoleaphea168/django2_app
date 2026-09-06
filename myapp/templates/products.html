@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Products
+{% endblock title %}
+
+{% block content %}
+    <h1>Products</h1>
+    <ul>
+        {% for product in products %}
+            <li>{{ product.name }} - ${{ product.price }}
+                {% if product.in_stock %}
+                    In Stock
+                {% else %}
+                    Out of Stock
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}
