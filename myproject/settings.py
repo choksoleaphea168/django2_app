@@ -82,10 +82,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-DB_HOST = os.getenv("DB_HOST")
-
-is_vercel = bool(os.getenv("VERCEL"))
-is_placeholder_or_local = DB_HOST in [None, "", "127.0.0.1", "localhost", "your-db-host"]
 
 if DATABASE_URL:
     DATABASES = {
@@ -95,22 +91,15 @@ if DATABASE_URL:
             ssl_require=True
         )
     }
-elif DB_HOST and not (is_vercel and is_placeholder_or_local):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": DB_HOST,
-            "PORT": os.getenv("DB_PORT", "5432"),
-        }
-    }
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": "/tmp/db.sqlite3" if is_vercel else BASE_DIR / "db.sqlite3",
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME", "django1_db"),
+            "USER": os.getenv("DB_USER", "postgres"),
+            "PASSWORD": os.getenv("DB_PASSWORD", "123"),
+            "HOST": os.getenv("DB_HOST", "127.0.0.1"),
+            "PORT": os.getenv("DB_PORT", "5432"),
         }
     }
 
